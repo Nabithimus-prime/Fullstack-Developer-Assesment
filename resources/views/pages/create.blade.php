@@ -3,46 +3,22 @@
 @section('content')
 
 {{-- new post --}}
-<div style="display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 30px 30px;
-            color: rgb(112, 112, 112)">
-    <h2 style="margin: 10;">
-        New Post
-    </h2>
+<div class="page-header">
+    <h2>New Post</h2>
     
     {{-- icons --}}
-    <div>
-        {{-- edit --}}
-        <a href="#" 
-        style= "margin-right: 15px; 
-                color: gray;
-                text-decoration: none;">
-            <i class="fas fa-pen"></i>
-        </a>
-        {{-- delete --}}
-        <a href="#" onclick="openModal('delete')" class="delete-icon"  
-                    style="color: gray;">
-            <i class="fas fa-trash"></i>
-        </a>
+    <div class="icon-area">
+        <i class="fas fa-pen"></i></a>
+        <a href="#" class="icon-button delete-icon" onclick="openModal('delete')"><i class="fas fa-trash"></i></a>
     </div>
 </div>
 
 
 {{-- data collection --}}
-<form method="POST" 
-        action="{{ route('posts.store') }}" 
-        enctype="multipart/form-data" 
-        id="createPostForm" 
-        style= "padding: 0 30px 30px; 
-                display: flex; 
-                flex-direction: column; 
-                gap: 20px;">
-    @csrf
+<form method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data" id="createPostForm" class="form-container">
+    @csrf  
 
     @if(isset($post))
-        <!-- Hidden input to hold old post id for deletion -->
         <input type="hidden" name="old_post_id" value="{{ $post->id }}">
     @endif
     
@@ -89,6 +65,7 @@
                <i class="fas fa-upload"></i>
             </button>
             <input type="file" id="featured_image" name="featured_image" accept="image/*" style="display:none;">
+
             {{-- Show current image when editing --}}
             @if(isset($post) && $post->featured_image)
                 <div style="margin-top: 10px;">
@@ -107,23 +84,11 @@
         </div>
     </div>
 
-    {{-- save and close btns --}}
-<div style="width: 50%; position: relative; padding: 20px;">
-    <div style="position: absolute; top: 0; right: 0; gap: 10px;">
-        <button type="submit" class="btn-orange" id="save-btn" 
-                style="margin-right: 15px;
-                        margin-bottom: 50px;
-                        width: 95px;">
-            Save
-        </button>
-        <button type="button" class="btn-orange" id="close-btn" 
-                style= "color: rgb(112, 112, 112);
-                        background-color: rgb(218, 218, 218);"
-                onclick="window.location.href='/'">
-            Cancel
-        </button>
+    {{-- btns --}}
+    <div class="form-actions">
+        <button type="submit" class="btn-orange">Save</button>
+        <button type="button" class="btn-orange cancel-btn" onclick="window.location.href='{{ url('/') }}'">Cancel</button>
     </div>
-</div>
 
 </form>
 

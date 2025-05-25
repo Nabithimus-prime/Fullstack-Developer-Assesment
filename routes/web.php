@@ -9,9 +9,8 @@ Route::get('/', function () {
     return view('pages.home', compact('posts'));
 });
 
-Route::get('/posts/create', function () {
-    return view('pages.create');
-});
+Route::get('/posts/create', 
+[PostController::class, 'create'])->name('posts.create');
 
 Route::post('/posts', 
 [PostController::class, 'store'])->name('posts.store');

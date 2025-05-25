@@ -21,30 +21,29 @@ class PostController extends Controller
         ]);
 
         // Delete old post if old_post_id is provided
-        $oldPostId = $request->input('old_post_id');
-        if ($oldPostId) {
+        if ($oldPostId = $request->input('old_post_id')) {
             $this->deletePostById($oldPostId);
         }
 
         // Create new post
         $post = Post::create([
-            'title' => $validated['title'],
-            'slug' => $validated['slug'],
-            'content' => $validated['content'],
-            'excerpt' => $validated['excerpt'],
+            'title'          => $validated['title'],
+            'slug'           => $validated['slug'],
+            'content'        => $validated['content'],
+            'excerpt'        => $validated['excerpt'],
             'published_date' => $validated['published_date'],
         ]);
 
         if ($request->hasFile('featured_image')) {
-            $image = $request->file('featured_image');
-            $extension = $image->getClientOriginalExtension();
-            $imageName = $post->id . '.' . $extension;
-            $path = $image->storeAs('images', $imageName, 'public');
+            $image      = $request->file('featured_image');
+            $extension  = $image->getClientOriginalExtension();
+            $imageName  = $post->id . '.' . $extension;
+            $path       = $image->storeAs('images', $imageName, 'public');
+
             $post->featured_image = $path;
             $post->save();
         }
-
-        // Redirect back to homepage with success message
+ 
         return redirect('/');
     }
 
@@ -52,11 +51,10 @@ class PostController extends Controller
     private function deletePostById($id)
     {
         $post = Post::find($id);
-
-            if (!$post) {
+        if (!$post) {
             return;
         }   
-        // Delete the image file if it exists
+
         if ($post->featured_image && Storage::disk('public')->exists($post->featured_image)) {
             Storage::disk('public')->delete($post->featured_image);
         }
@@ -69,11 +67,13 @@ class PostController extends Controller
         return redirect('/')->with('success', 'Post deleted successfully!');
     }
 
-    public function create() {
+    public function create() 
+    {
         return view('pages.create', ['post' => null]);
     }
 
-    public function edit($id) {
+    public function edit($id) 
+    {
         $post = Post::findOrFail($id);
         return view('pages.create', compact('post'));
     }
@@ -81,7 +81,6 @@ class PostController extends Controller
     public function show($id)
     {
         $post = Post::find($id);
-
         if (!$post) {
             abort(404, 'Post not found');
         }

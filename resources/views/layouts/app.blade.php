@@ -7,12 +7,53 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
     <style>
-        
+
+        .add-new-btn {
+            text-align: left;
+            margin-top: 50px;
+            margin-left: 25px;
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 0;
             background-color:rgb(252, 252, 252);
+        }
+
+        .blog-card {
+            display: flex;
+            background-color: white;
+            box-shadow: 2px 8px 5px rgba(113, 113, 113, 0.05);
+            padding-top: 0;
+            margin: 30px 25px;
+            overflow: hidden;
+        }
+
+        .blog-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .blog-content {
+            width: 70%;
+            padding: 25px;
+            position: relative;
+        }
+
+        .blog-excerpt {
+            margin: 20px 0 40px;
+            color: rgb(112, 112, 112);
+            font-weight: bold;
+            font-size: clamp(8px, 3vw, 12px);
+        }
+
+        .blog-slug {
+            margin-top: 0;
+            color: rgb(112, 112, 112);
+            font-weight: bolder;
+            font-size: clamp(16px, 3vw, 24px);
         }
 
         .btn-orange {
@@ -26,18 +67,35 @@
             border: none;
         }
 
-        .form-row {
-            display: flex;
-            gap: 30px;
-            align-items: flex-start;
+        .card-actions {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: clamp(12px, 2vw, 16px);
         }
 
-        .form-label {
-            flex: 1;
-            font-weight: bold;
-            color: #555;
-            margin-top: 10px;
-            font-size: 14px;
+        .card-actions i {
+            margin-right: clamp(10px, 3vw, 15px);
+            color: rgb(116, 116, 116);
+        }
+
+        .cancel-btn {
+            background-color: rgb(218, 218, 218);
+            color: rgb(112, 112, 112);
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            padding-top: 20px;
+        }
+
+        .form-container {
+            padding: 0 30px 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
         .form-field {
@@ -57,16 +115,59 @@
             text-align: left;
         }
 
-        textarea::placeholder {
+        .form-label {
+            flex: 1;
+            font-weight: bold;
+            color: #555;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+        }
+
+        .icon-area {
+            display: flex;
+            gap: 15px;
+        }
+
+        .icon-button {
+            color: gray;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        input::placeholder {
             font-family: 'Poppins', sans-serif;
             color: rgb(190, 190, 190);
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px;
+            color: #707070;
+        }
+
+        .page-header h2 {
+            margin: 0;
+        }
+
+        .slug-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         textarea {
             resize: none;
         }
 
-        input::placeholder {
+        textarea::placeholder {
             font-family: 'Poppins', sans-serif;
             color: rgb(190, 190, 190);
         }
@@ -162,10 +263,21 @@
             if(type === 'delete') {
                 currentPostId = postId;
 
-                if (createPostForm) {
+                if (document.getElementById('createPostForm')) {
                     modalMessage.textContent = 'Are you sure you want to clear the post?';
                     modalYes.onclick = () => {
-                        document.getElementById('createPostForm').reset();
+                        const form = document.getElementById('createPostForm');
+                        form.reset(); 
+
+                        form.querySelectorAll('input[type="text"], input[type="email"], textarea, select').forEach(field => {
+                            field.value = '';
+                        });
+                        
+                        const fileInput = form.querySelector('input[type="file"]');
+                        if (fileInput) fileInput.value = '';
+
+                        const previewImg = form.querySelector('img');
+                        if (previewImg) previewImg.remove();
                         closeModal();
                     };
                 } else {   
@@ -177,7 +289,7 @@
                 }
             
             }else if(type === 'edit') {
-                modalMessage.textContent = 'Do you want to edit this post?';
+                modalMessage.textContent = 'Would you like to make changes to this post?';
                 modalYes.onclick = () => {
                 window.location.href = `/posts/${postId}/edit`;
                 };
@@ -206,5 +318,6 @@
         });
     </script>
 
+@stack('scripts')
 </body>
 </html>
