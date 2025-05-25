@@ -1,23 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Models\Post;
+use App\Http\Controllers\PostController;
 
 Route::get('/', function () {
-    $posts = [
-        [
-            'id' => 1,
-            'title' => 'First Post',
-            'excerpt' => 'This is the first post excerpt.',
-            'image' => 'images/jjk.jpg'
-        ],
-        [
-             'id' => 2,
-            'title' => 'Second Post',
-            'excerpt' => 'This is the second post excerpt.',
-            'image' => 'images/AOT.jpg'
-        ]
-    ];
-
+   $posts = Post::latest()->get(); // fetch all posts from DB, newest first
     return view('pages.home', compact('posts'));
 });
 
@@ -25,6 +13,17 @@ Route::get('/posts/create', function () {
     return view('pages.create');
 });
 
-Route::get('/posts/{id}', function ($id) {
-    return view('pages.show', compact('id'));
-});
+Route::post('/posts', 
+[PostController::class, 'store'])->name('posts.store');
+
+Route::get('/posts/{id}', 
+[PostController::class, 'show'])->name('posts.show');
+
+Route::get('/posts/{id}/edit', 
+[PostController::class, 'edit'])->name('posts.edit');
+
+Route::put('/posts/{id}', 
+[PostController::class, 'update'])->name('posts.update');
+
+Route::delete('/posts/{id}', 
+[PostController::class, 'destroy'])->name('posts.destroy');
